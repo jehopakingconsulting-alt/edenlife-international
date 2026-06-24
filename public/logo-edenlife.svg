@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120">
+  <!-- Globe -->
+  <circle cx="55" cy="60" r="45" fill="#2563EB"/>
+  <!-- Crack/river on globe -->
+  <path d="M45 18 Q38 35 42 50 Q48 65 40 80 Q35 95 38 102" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Leaves -->
+  <g fill="#2563EB">
+    <ellipse cx="68" cy="18" rx="12" ry="6" transform="rotate(-30 68 18)"/>
+    <ellipse cx="82" cy="10" rx="14" ry="6" transform="rotate(-15 82 10)"/>
+    <ellipse cx="58" cy="8" rx="11" ry="5" transform="rotate(-50 58 8)"/>
+  </g>
+  <!-- Stem -->
+  <path d="M60 20 Q65 12 75 8" stroke="#2563EB" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M60 20 Q58 14 55 10" stroke="#2563EB" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Text: Eden -->
+  <text x="108" y="68" font-family="Georgia, serif" font-size="48" font-weight="bold" fill="#111111" letter-spacing="-1">Eden</text>
+  <!-- Text: Life -->
+  <text x="232" y="68" font-family="Georgia, serif" font-size="48" font-weight="bold" fill="#2563EB" font-style="italic" letter-spacing="-1">Life</text>
+  <!-- Black bar -->
+  <rect x="108" y="78" width="220" height="16" fill="#111111" rx="1"/>
+  <!-- Subtitle on bar -->
+  <text x="118" y="90" font-family="Arial, sans-serif" font-size="8" fill="white" letter-spacing="1">*Vision *Productions *Héritage *Ministères*</text>
+  <!-- Flags (simplified colored rectangles) -->
+  <g transform="translate(315, 78)">
+    <!-- France -->
+    <rect x="0" y="0" width="5" height="16" fill="#0055A4"/>
+    <rect x="5" y="0" width="5" height="16" fill="white"/>
+    <rect x="10" y="0" width="5" height="16" fill="#EF4135"/>
+    <!-- Canada -->
+    <rect x="18" y="0" width="15" height="16" fill="white" stroke="#ddd" stroke-width="0.5"/>
+    <rect x="18" y="0" width="4" height="16" fill="#FF0000"/>
+    <rect x="29" y="0" width="4" height="16" fill="#FF0000"/>
+    <!-- Haiti -->
+    <rect x="36" y="0" width="15" height="8" fill="#00209F"/>
+    <rect x="36" y="8" width="15" height="8" fill="#D21034"/>
+    <!-- USA -->
+    <rect x="54" y="0" width="15" height="16" fill="#B22234"/>
+    <rect x="54" y="0" width="6" height="9" fill="#3C3B6E"/>
+  </g>
+  <!-- INTERNATIONAL -->
+  <text x="185" y="110" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#111111" text-anchor="middle" letter-spacing="3">INTERNATIONAL</text>
+</svg>
