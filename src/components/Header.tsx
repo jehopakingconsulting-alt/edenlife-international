@@ -5,13 +5,18 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { useAuth } from "./AuthProvider";
 
 export function Header() {
   const t = useTranslations("nav");
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const { user, profile } = useAuth();
+  const initials = profile
+    ? `${(profile.first_name as string)?.[0] || ""}${(profile.last_name as string)?.[0] || ""}`.toUpperCase()
+    : user?.email?.[0]?.toUpperCase() || "";
 
   const links = [
     { href: "/", label: t("home"), isRoute: true },
@@ -64,18 +69,29 @@ export function Header() {
           {/* Actions */}
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
+            {user ? (
+              <Link
+                href="/dashboard"
+                className="hidden sm:inline-flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600"
+              >
+                <div className="h-8 w-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">
+                  {initials || <User className="h-4 w-4" />}
+                </div>
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="hidden sm:inline-flex text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600"
+              >
+                {t("login")}
+              </Link>
+            )}
             <Link
-              href="/login"
-              className="hidden sm:inline-flex text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600"
-            >
-              {t("login")}
-            </Link>
-            <a
               href="/donate"
               className="hidden sm:inline-flex rounded-full bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
             >
               {t("donate")}
-            </a>
+            </Link>
             <button
               onClick={() => setOpen(!open)}
               className="lg:hidden p-2 text-gray-600 dark:text-gray-300"
@@ -110,12 +126,20 @@ export function Header() {
               )
             )}
             <div className="flex gap-3 pt-2 px-3">
-              <Link href="/login" className="text-sm font-medium text-blue-600">
-                {t("login")}
-              </Link>
-              <Link href="/register" className="text-sm font-medium text-blue-600">
-                {t("register")}
-              </Link>
+              {user ? (
+                <Link href="/dashboard" className="text-sm font-medium text-blue-600">
+                  Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link href="/login" className="text-sm font-medium text-blue-600">
+                    {t("login")}
+                  </Link>
+                  <Link href="/register" className="text-sm font-medium text-blue-600">
+                    {t("register")}
+                  </Link>
+                </>
+              )}
             </div>
           </nav>
         )}
