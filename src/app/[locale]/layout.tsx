@@ -6,6 +6,7 @@ import "../globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AuthProvider } from "@/components/AuthProvider";
+import { Chatbot } from "@/components/Chatbot";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -39,6 +40,7 @@ export default async function LocaleLayout({
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
+            <Chatbot />
           </AuthProvider>
         </NextIntlClientProvider>
       </body>
