@@ -16,6 +16,8 @@ import {
   FileText,
   Sparkles,
   Users,
+  Loader2,
+  CheckCircle2,
 } from "lucide-react";
 
 const AMOUNTS = [10, 25, 50, 100, 250, 500];
@@ -26,8 +28,48 @@ export default function DonatePage() {
   const [selectedAmount, setSelectedAmount] = useState<number | null>(50);
   const [customAmount, setCustomAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("stripe");
+  const [fund, setFund] = useState("general");
+  const [message, setMessage] = useState("");
+  const [anonymous, setAnonymous] = useState(false);
+  const [receipt, setReceipt] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const activeAmount = selectedAmount ?? (Number(customAmount) || 0);
+
+  // Check URL params for success/cancelled
+  if (typeof window !== "undefined") {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("success") === "true" && !success) {
+      setSuccess(true);
+    }
+  }
+
+  async function handleDonate() {
+    if (activeAmount < 1) return;
+    setLoading(true);
+
+    const res = await fetch("/api/donate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: activeAmount,
+        currency: "cad",
+        frequency,
+        fund,
+        anonymous,
+        message,
+        receipt,
+      }),
+    });
+
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      setLoading(false);
+    }
+  }
 
   return (
     <section className="min-h-[calc(100vh-4rem)] bg-gray-50 dark:bg-gray-950 py-12">
@@ -130,7 +172,8 @@ export default function DonatePage() {
                     <input
                       type="radio"
                       name="fund"
-                      defaultChecked={key === "general"}
+                      checked={fund === key}
+                      onChange={() => setFund(key)}
                       className="accent-blue-600"
                     />
                     <Icon className="h-4 w-4 text-gray-400" />
@@ -246,32 +289,48 @@ export default function DonatePage() {
                 </label>
                 <textarea
                   rows={2}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
                   className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition resize-none"
                 />
               </div>
               <div className="flex flex-col gap-3">
                 <label className="flex items-center gap-2 text-sm cursor-pointer">
-                  <input type="checkbox" className="accent-blue-600 rounded" />
+                  <input type="checkbox" checked={anonymous} onChange={(e) => setAnonymous(e.target.checked)} className="accent-blue-600 rounded" />
                   <EyeOff className="h-4 w-4 text-gray-400" />
                   {t("anonymous")}
                 </label>
                 <label className="flex items-center gap-2 text-sm cursor-pointer">
-                  <input
-                    type="checkbox"
-                    defaultChecked
-                    className="accent-blue-600 rounded"
-                  />
+                  <input type="checkbox" checked={receipt} onChange={(e) => setReceipt(e.target.checked)} className="accent-blue-600 rounded" />
                   <FileText className="h-4 w-4 text-gray-400" />
                   {t("receipt")}
                 </label>
               </div>
             </div>
 
+            {/* Success */}
+            {success && (
+              <div className="flex items-center gap-2 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 px-4 py-3 text-sm text-green-600">
+                <CheckCircle2 className="h-4 w-4 shrink-0" />
+                {t("thank_you")}
+              </div>
+            )}
+
             {/* Submit */}
-            <button className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-4 text-base font-semibold text-white hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20">
-              <Heart className="h-5 w-5" />
-              {t("donate_btn")} — ${activeAmount}{" "}
-              {frequency === "monthly" ? "/ mois" : ""}
+            <button
+              onClick={handleDonate}
+              disabled={loading || activeAmount < 1}
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-4 text-base font-semibold text-white hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20 disabled:opacity-50"
+            >
+              {loading ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <>
+                  <Heart className="h-5 w-5" />
+                  {t("donate_btn")} — ${activeAmount}{" "}
+                  {frequency === "monthly" ? "/ mois" : ""}
+                </>
+              )}
             </button>
             <p className="text-center text-xs text-gray-400 flex items-center justify-center gap-1">
               <Lock className="h-3 w-3" /> {t("secure")}
